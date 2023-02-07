@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 const socket = new WebSocket('ws://localhost:8080');
 
-// import { Chat } from './components/chat'
-
+// ws://localhost:8080
 
 function App() {
 
-  const [list, setList] = useState([])
+  const [list, setList] = useState([]);
+  console.log({list})
 
   socket.onmessage = ({ data }) => {
     console.log(`Message from server ${data}`)
@@ -18,9 +18,10 @@ function App() {
 
   return (
     <div className={style.app} role="main">
-      <div>
-        Hello World
-      </div>
+      <ul>
+        {list.map((msg) => <li>{msg}</li>)}
+      </ul>
+      <input id="msgInput"></input>
       <button onClick={() => {
         const message = document.querySelector('#msgInput').value;
         socket.send(message)

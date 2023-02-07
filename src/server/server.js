@@ -1,10 +1,16 @@
 Bun.serve({
   port: 8080,
   fetch(req, server) {
-    if (server.upgrade(req)) {
+    // could use the url parameters to set up different rooms
+    console.log(req.url)
+    if (server.upgrade(req, {
+      data: {
+        name: new URL(req.url).searchParams.get("name") || "friend"
+      }
+    })) {
       return;
     }
-    return new Response("No no no no")
+    return new Response("Expected a websocket connection", { status: 400 })
   },
   websocket: {
     open(ws) {
@@ -13,10 +19,11 @@ Bun.serve({
       ws.subscribe('chat')
     },
     message(ws, message) {
-      ws.publish('chat', `${ws.data.name}: ${message}`)
+      console.log({ws}, {message})
+      ws.publish('chat', `${ws.data?.name}: ${message}`)
     },
     close(ws, code, reason) {
-      ws.publish('chat', `${ws.data.name} left the chat`)
+      ws.publish('chat', `${ws.data?.name} left the chat`)
     },
     drain(ws) {
       console.log("Please send me data. I am ready to receive it.")
