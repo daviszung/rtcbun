@@ -10,7 +10,7 @@
   margin: 0;
   padding: 1rem;
   width: 100%;
-  height: 95%;
+  height: 92%;
   background: #222246;
   overflow-y: auto;
   overflow-x: hidden;
@@ -23,12 +23,28 @@
 }
 
 .message {
-  color: #964FDB;
   font-size: large;
+}
+
+.msgName {
+  font-weight: 500;
+  color: #84D5DE;
+}
+
+.msgText {
+  font-weight: 400;
+  color: #964FDB;
 }
 
 .chatInput {
   width: 100%;
-  height: 5%;
+  height: 8%;
   resize: none;
+  padding: 1rem;
+  background-color: #3E3E5A;
+  color: white;
+}
+
+.chatInput:focus {
+  outline: 0;
 }

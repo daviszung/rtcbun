@@ -16,7 +16,11 @@ export function Chat({list, socket}) {
   return (
     <div className={style.chat}>
       <ul className={style.list}>
-        {list.map((msg) => <li className={style.message}><div>{msg.name}</div><div>{msg.message}</div></li>)}
+        {list.map((msg) => 
+        <li className={style.message}>
+          <div className={style.msgName}>{msg.name}</div>
+          <div className={style.msgText}>{msg.message}</div>
+        </li>)}
       </ul>
       <textarea id="msgInput" className={style.chatInput} onKeyDown ={(event) => {
         if (event.keyCode === 13 && !event.shiftKey) {
