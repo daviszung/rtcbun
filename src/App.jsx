@@ -21,6 +21,10 @@ function App() {
       <div>
         Hello World
       </div>
+      <button onClick={() => {
+        const message = document.querySelector('#msgInput').value;
+        socket.send(message)
+      }}>Send</button>
     </div>
   );
 }
