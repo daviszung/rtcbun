@@ -23,7 +23,7 @@ export function Chat({list, socket}) {
         </li>)}
       </ul>
       <textarea id="msgInput" className={style.chatInput} onKeyDown ={(event) => {
-        if (event.keyCode === 13 && !event.shiftKey) {
+        if (event.key === 'Enter' && !event.shiftKey) {
           event.preventDefault()
           sendInput(socket)
         }
