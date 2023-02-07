@@ -11,13 +11,18 @@ function sendInput(socket) {
 
 export function Chat({list, socket}) {
 
+  console.log('in chat: ', list[0]?.message)
+
   return (
     <div className={style.chat}>
       <ul className={style.list}>
-        {list.map((msg) => <li>{msg}</li>)}
+        {list.map((msg) => <li className={style.message}><div>{msg.name}</div><div>{msg.message}</div></li>)}
       </ul>
       <textarea id="msgInput" className={style.chatInput} onKeyDown ={(event) => {
-        if (event.keyCode === 13) {sendInput(socket)}
+        if (event.keyCode === 13 && !event.shiftKey) {
+          event.preventDefault()
+          sendInput(socket)
+        }
       }}></textarea>
     </div>
   );

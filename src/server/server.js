@@ -19,8 +19,13 @@ Bun.serve({
       ws.subscribe('chat')
     },
     message(ws, message) {
-      console.log({ws}, {message})
-      ws.publish('chat', `${ws.data?.name}: ${message}`)
+      console.log({message})
+      const messageObject = {
+        name: ws.data?.name,
+        message: message
+      };
+      const messageString = JSON.stringify(messageObject);
+      ws.publish('chat', messageString)
     },
     close(ws, code, reason) {
       ws.publish('chat', `${ws.data?.name} left the chat`)

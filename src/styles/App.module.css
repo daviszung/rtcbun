@@ -1,3 +1,12 @@
 .app {
-  height: 100vh;
+  display: flex;
+  height: 100%;
+  padding: 5rem 15rem 10rem 20rem;
+}
+
+.left {
+  border: 1px solid black;
+  width: 85%;
+  height: 100%;
+  resize: both;
 }
