@@ -7,10 +7,10 @@ function closeModal() {
 
 export function Modal() {
   return (
-    <div id="myModal" class={style.modal}>
+    <div id="myModal" className={style.modal}>
       <div className={style.nameContainer}>
         <h1 className={style.nameText}>Name:</h1>
-        <input className={style.inputName}></input>
+        <input className={style.inputName} maxLength="15"></input>
       </div>
       <div className={style.optionsBtns}>
         <button className={style.createBtn}>Create a room</button>
