@@ -1,23 +1,18 @@
 import style from "../styles/components/modal.module.css"
 
-function checkNameInput() {
-  const input = document.querySelector("#nameInput")
+function checkInput(id) {
+  const input = document.querySelector(`#${id}`)
   if (input.value.length > 0) {
     return input.value;
   } else {
     return false;
   }
-}
+};
 
 function closeModal() {
   const modal = document.querySelector("#myModal");
   modal.style.display = "none"
-}
-
-function joinRoom() {
-
-}
-
+};
 
 export function Modal({setRoomID, setName}) {
 
@@ -28,7 +23,12 @@ export function Modal({setRoomID, setName}) {
     console.log(data)
     setName(name)
     setRoomID(data)
-  }
+  };
+
+  function joinRoom(name, roomToJoin) {
+    setName(name)
+    setRoomID(roomToJoin)
+  };
 
   return (
     <div id="myModal" className={style.modal}>
@@ -38,19 +38,21 @@ export function Modal({setRoomID, setName}) {
       </div>
       <div className={style.optionsBtns}>
         <button id="createBtn" className={style.createBtn} onClick={() => {
-          const name = checkNameInput();
+          const name = checkInput('nameInput');
           if (name) {
             createRoom(name)
             closeModal()
           }
         }}>Create a room</button>
         <button id="joinBtn" className={style.joinBtn} onClick={() => {
-          if (checkNameInput()) {
-            joinRoom()
+          const name = checkInput('nameInput');
+          const roomToJoin = checkInput('joinRoomInput');
+          if (name && roomToJoin) {
+            joinRoom(name, roomToJoin)
             closeModal()
           }
         }}>Join a room</button>
       </div>
     </div>
   )
-}
+};
