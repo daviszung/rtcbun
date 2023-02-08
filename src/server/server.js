@@ -1,11 +1,33 @@
+const rooms = {};
+
+// http server
+Bun.serve({
+  port: 5000,
+  fetch(req, server) {
+    console.log({req})
+
+    return new Response('meow', {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "text/plain"
+      }
+    })
+  },
+  error () {
+    return new Response("error in http server")
+  }
+});
+
+
+// websocket server
 Bun.serve({
   port: 8080,
   fetch(req, server) {
     // could use the url parameters to set up different rooms
-    console.log(req.url)
+    const url = new URL(req.url)
     if (server.upgrade(req, {
       data: {
-        name: new URL(req.url).searchParams.get("name") || "friend"
+        name: url.searchParams.get("name") || "unnamed"
       }
     })) {
       return;
@@ -15,7 +37,6 @@ Bun.serve({
   websocket: {
     open(ws) {
       console.log("WebSocket opened");
-
       ws.subscribe('chat')
     },
     message(ws, message) {
@@ -34,4 +55,4 @@ Bun.serve({
       console.log("Please send me data. I am ready to receive it.")
     }
   }
-})
+});

@@ -11,13 +11,11 @@ function sendInput(socket) {
 
 export function Chat({list, socket}) {
 
-  console.log('in chat: ', list[0]?.message)
-
   return (
     <div className={style.chat}>
       <ul className={style.list}>
-        {list.map((msg) => 
-        <li className={style.message}>
+        {list.map((msg, index) => 
+        <li key={index} className={style.message}>
           <div className={style.msgName}>{msg.name}</div>
           <div className={style.msgText}>{msg.message}</div>
         </li>)}
