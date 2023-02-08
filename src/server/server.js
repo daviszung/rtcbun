@@ -57,5 +57,9 @@ Bun.serve({
     drain(ws) {
       console.log("Please send me data. I am ready to receive it.")
     }
+  },
+  error() {
+    console.log("Error in WebSocket Server")
+    return new Response("Error in WebSocket Server")
   }
 });
