@@ -9,10 +9,13 @@ function sendInput(socket) {
   return;
 }
 
-export function Chat({list, socket}) {
+export function Chat({list, socket, roomID}) {
 
   return (
     <div className={style.chat}>
+      <div className={style.roomIDContainer}>
+        <p>Room: {roomID}</p>
+      </div>
       <ul className={style.list}>
         {list.map((msg, index) => 
         <li key={index} className={style.message}>
@@ -21,7 +24,7 @@ export function Chat({list, socket}) {
         </li>)}
       </ul>
       <textarea id="msgInput" className={style.chatInput} onKeyDown ={(event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
+        if (event.key === 'Enter' && !event.shiftKey && socket) {
           event.preventDefault()
           sendInput(socket)
         }

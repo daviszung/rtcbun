@@ -1,14 +1,15 @@
 let numOfRooms = 0;
-const rooms = {};
+
+// When someone creates a new room, we add 1 to the number of rooms
 
 // http server
 Bun.serve({
   port: 5000,
   fetch(req, server) {
     const url = new URL(req.url);
-    console.log({req})
-
-    return new Response(`Meow`, {
+    console.log('HTTP Request Received: ', {req})
+    numOfRooms += 1;
+    return new Response(`${numOfRooms}`, {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "content-type": "text/plain"
@@ -38,18 +39,8 @@ Bun.serve({
   },
   websocket: {
     open(ws) {
-      // destructure data from client ws connection
-      const { name, room } = ws.data;
-
-      // create room or add name to room
-      if (rooms[room]) {
-        rooms[room].push(name)
-      } else {
-        rooms[room] = [name]
-      }
-
       console.log("WebSocket opened");
-      ws.subscribe(room)
+      ws.subscribe(ws.data.room)
     },
 
     message(ws, message) {

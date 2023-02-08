@@ -1,35 +1,32 @@
 import style from "./styles/App.module.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Modal } from "./components/modal";
 import { Chat } from './components/Chat.jsx'
 
-const socket = new WebSocket(`ws://localhost:8080/?name=dave&room=fake`);
-// const socket = new WebSocket(`ws://localhost:8080/?name=${username}&room=${room}`);
-
-
-
 function App() {
-
+  const [name, setName] = useState(null);
+  const [socket, setSocket] = useState(null);
   const [list, setList] = useState([]);
+  const [roomID, setRoomID] = useState(null);
 
-  socket.onmessage = ({ data }) => {
-    data = JSON.parse(data)
-    setList([...list, data])
-  };
+  useEffect(() => {
+    if (name && roomID) {
+      const tempSocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
+      tempSocket.onmessage = ({ data }) => {
+        data = JSON.parse(data)
+        setList(list => [...list, data])
+      };
+      setSocket(tempSocket)
+    }
+  }, [roomID])
 
   return (
     <div className={style.app} role="main">
-      <Modal>
-      </Modal>
+      <Modal setRoomID={setRoomID} setName={setName}></Modal>
       <div className={style.left}>
-        <button onClick={async () => {
-          let data = await fetch('http://localhost:5000/');
-          data = await data.text()
-          console.log(data)
-        }}>send</button>
       </div>
-      <Chat list={list} socket={socket}></Chat>
+      <Chat list={list} socket={socket} roomID={roomID}></Chat>
     </div>
   );
 }
