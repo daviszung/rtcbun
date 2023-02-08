@@ -1,4 +1,4 @@
-import style from "./styles/App.module.css";
+import s from "./styles/App.module.css";
 import { useState, useEffect } from 'react';
 
 import { Modal } from "./components/modal";
@@ -22,9 +22,9 @@ function App() {
   }, [roomID])
 
   return (
-    <div className={style.app} role="main">
+    <div className={s.app} role="main">
       <Modal setRoomID={setRoomID} setName={setName}></Modal>
-      <div className={style.left}>
+      <div className={s.left}>
       </div>
       <Chat list={list} socket={socket} roomID={roomID}></Chat>
     </div>

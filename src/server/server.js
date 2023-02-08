@@ -1,13 +1,10 @@
+// track the number of rooms
 let numOfRooms = 0;
-
-// When someone creates a new room, we add 1 to the number of rooms
 
 // http server
 Bun.serve({
   port: 5000,
   fetch(req, server) {
-    const url = new URL(req.url);
-    console.log('HTTP Request Received: ', {req})
     numOfRooms += 1;
     return new Response(`${numOfRooms}`, {
       headers: {
@@ -39,13 +36,11 @@ Bun.serve({
   },
   websocket: {
     open(ws) {
-      console.log("WebSocket opened");
+      console.log(`WebSocket opened, user ${ws.data?.name} subscribed to room ${ws.data?.room}`);
       ws.subscribe(ws.data.room)
     },
 
     message(ws, message) {
-      console.log({ws})
-      console.log({message})
       const messageObject = {
         name: ws.data?.name,
         message: message
@@ -55,6 +50,7 @@ Bun.serve({
     },
 
     close(ws, code, reason) {
+      console.log("connection closed")
       ws.publish(ws.data.room, `${ws.data?.name} left the chat`)
     },
 

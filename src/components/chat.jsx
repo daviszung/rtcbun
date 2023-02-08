@@ -1,5 +1,6 @@
-import style from '../styles/components/chat.module.css'
+import s from '../styles/components/chat.module.css'
 
+// sends a message from the chatbox to the ws server
 function sendInput(socket) {
   const input = document.querySelector('#msgInput');
   if(input.value.length > 0) {
@@ -9,21 +10,22 @@ function sendInput(socket) {
   return;
 }
 
+
 export function Chat({list, socket, roomID}) {
 
   return (
-    <div className={style.chat}>
-      <div className={style.roomIDContainer}>
+    <div className={s.chat}>
+      <div className={s.roomIDContainer}>
         <p>Room: {roomID}</p>
       </div>
-      <ul className={style.list}>
+      <ul className={s.list}>
         {list.map((msg, index) => 
-        <li key={index} className={style.message}>
-          <div className={style.msgName}>{msg.name}</div>
-          <div className={style.msgText}>{msg.message}</div>
+        <li key={index} className={s.message}>
+          <div className={s.msgName}>{msg.name}</div>
+          <div className={s.msgText}>{msg.message}</div>
         </li>)}
       </ul>
-      <textarea id="msgInput" className={style.chatInput} onKeyDown ={(event) => {
+      <textarea id="msgInput" className={s.chatInput} onKeyDown ={(event) => {
         if (event.key === 'Enter' && !event.shiftKey && socket) {
           event.preventDefault()
           sendInput(socket)
