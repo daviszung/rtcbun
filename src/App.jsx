@@ -1,12 +1,13 @@
 import style from "./styles/App.module.css";
 import { useState } from 'react';
 
+import { Modal } from "./components/modal";
 import { Chat } from './components/Chat.jsx'
 
-const socket = new WebSocket(`ws://localhost:8080/?name=dave`);
-
-
+const socket = new WebSocket(`ws://localhost:8080/?name=dave&room=fake`);
 // const socket = new WebSocket(`ws://localhost:8080/?name=${username}&room=${room}`);
+
+
 
 function App() {
 
@@ -19,6 +20,8 @@ function App() {
 
   return (
     <div className={style.app} role="main">
+      <Modal>
+      </Modal>
       <div className={style.left}>
         <button onClick={async () => {
           let data = await fetch('http://localhost:5000/');
