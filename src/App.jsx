@@ -1,6 +1,7 @@
 import s from "./styles/App.module.css";
 import { useState, useEffect } from 'react';
 
+// components
 import { Modal } from "./components/modal";
 import { Chat } from './components/Chat.jsx'
 
@@ -10,6 +11,8 @@ function App() {
   const [list, setList] = useState([]);
   const [roomID, setRoomID] = useState(null);
 
+  // when the roomID is updated, the client creates/joins a
+  // room with a ws connection
   useEffect(() => {
     if (name && roomID) {
       const tempSocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
