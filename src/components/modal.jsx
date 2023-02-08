@@ -32,9 +32,13 @@ export function Modal({setRoomID, setName}) {
 
   return (
     <div id="myModal" className={style.modal}>
-      <div className={style.nameContainer}>
-        <h1 className={style.nameText}>Name:</h1>
-        <input id="nameInput" className={style.inputName} maxLength="15"></input>
+      <div className={style.container}>
+        <h2 className={style.heading}>Name:</h2>
+        <input id="nameInput" className={style.inputField} maxLength="15"></input>
+      </div>
+      <div className={style.container}>
+        <h3 className={style.heading}>Join Room:</h3>
+        <input id="joinRoomInput" className={style.inputField} maxLength="4"></input>
       </div>
       <div className={style.optionsBtns}>
         <button id="createBtn" className={style.createBtn} onClick={() => {
