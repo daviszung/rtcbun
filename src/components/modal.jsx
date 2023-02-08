@@ -8,13 +8,13 @@ function closeModal() {
 export function Modal() {
   return (
     <div id="myModal" class={style.modal}>
-      <div class={style.modalContent}>
-        <h1>Name:</h1>
-        <input></input>
-        <div>
-          <button></button>
-          <button></button>
-        </div>
+      <div className={style.nameContainer}>
+        <h1 className={style.nameText}>Name:</h1>
+        <input className={style.inputName}></input>
+      </div>
+      <div className={style.optionsBtns}>
+        <button className={style.createBtn}>Create a room</button>
+        <button className={style.joinBtn}>Join a room</button>
       </div>
     </div>
   )
