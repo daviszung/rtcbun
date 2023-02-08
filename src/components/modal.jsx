@@ -14,7 +14,7 @@ function checkInput(id) {
 // closes the modal
 function closeModal() {
   const modal = document.querySelector("#myModal");
-  modal.s.display = "none"
+  modal.style.display = "none"
 };
 
 export function Modal({setRoomID, setName}) {

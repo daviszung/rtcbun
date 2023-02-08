@@ -36,22 +36,45 @@ Bun.serve({
   },
   websocket: {
     open(ws) {
-      console.log(`WebSocket opened, user ${ws.data?.name} subscribed to room ${ws.data?.room}`);
-      ws.subscribe(ws.data.room)
+
+      console.log(`New ws connection, user (${ws.data?.name}) subscribed to room (${ws.data?.room})`);
+
+      ws.subscribe(ws.data.room);
+
+      const messageObject = {
+        name: "SERVER",
+        message: `${ws.data?.name} joined the room`
+      };
+
+      const joinMessage = JSON.stringify(messageObject);
+
+      ws.publish(ws.data.room, joinMessage);
     },
 
     message(ws, message) {
+
       const messageObject = {
         name: ws.data?.name,
         message: message
       };
+
       const messageString = JSON.stringify(messageObject);
-      ws.publish(ws.data.room, messageString)
+
+      ws.publish(ws.data.room, messageString);
     },
 
     close(ws, code, reason) {
-      console.log("connection closed")
-      ws.publish(ws.data.room, `${ws.data?.name} left the chat`)
+
+      console.log(`connection closed in room ${ws.data?.room}`);
+
+      const messageObject = {
+        name: "SERVER",
+        message: `${ws.data?.name} left the room`
+      };
+
+      const closeMessage = JSON.stringify(messageObject);
+
+      ws.publish(ws.data.room, closeMessage);
     },
 
     drain(ws) {
