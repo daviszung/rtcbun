@@ -24,16 +24,25 @@ export function Modal({setRoomID, setName}) {
   // puts the user into the new room
   async function createRoom(name) {
     let data = await fetch(`http://localhost:5000/?name=${name}`);
-    data = await data.text()
-    setName(name)
-    setRoomID(data)
+    data = await data.text();
+    setName(name);
+    setRoomID(data);
   };
 
   // puts the user into a requested room
   // TODO: Make sure that the requested room exists
-  function joinRoom(name, roomToJoin) {
-    setName(name)
-    setRoomID(roomToJoin)
+  async function joinRoom(name, roomToJoin) {
+    
+    let data = await fetch(`http://localhost:5000/?name=${name}&roomReq=${roomToJoin}`)
+    data = await data.text();
+    console.log({data})
+    if (data === "Requested room does not exist") {
+      alert(data)
+    } else {
+      setName(name);
+      setRoomID(roomToJoin);
+      closeModal();
+    }
   };
 
   return (
@@ -44,7 +53,7 @@ export function Modal({setRoomID, setName}) {
       </div>
       <div className={s.container}>
         <h3 className={s.heading}>Join Room:</h3>
-        <input id="joinRoomInput" className={s.inputField} maxLength="4"></input>
+        <input id="joinRoomInput" className={s.inputField} maxLength="4" type="number"></input>
       </div>
       <div className={s.optionsBtns}>
         <button id="createBtn" className={s.createBtn} onClick={() => {
@@ -59,7 +68,6 @@ export function Modal({setRoomID, setName}) {
           const roomToJoin = checkInput('joinRoomInput');
           if (name && roomToJoin) {
             joinRoom(name, roomToJoin)
-            closeModal()
           }
         }}>Join a room</button>
       </div>

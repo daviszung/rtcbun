@@ -5,13 +5,41 @@ let numOfRooms = 0;
 Bun.serve({
   port: 5000,
   fetch(req, server) {
-    numOfRooms += 1;
-    return new Response(`${numOfRooms}`, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "content-type": "text/plain"
+    console.log({req})
+    const url = new URL(req.url);
+    const roomReq = url.searchParams.get('roomReq');
+    const name = url.searchParams.get('name')
+    if (roomReq) {
+      if (roomReq <= 0 || roomReq > numOfRooms) {
+        console.log(`${name} tried to join a room that doesn't exist`)
+        return new Response('Requested room does not exist', {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "text/plain"
+          }
+        });
       }
-    })
+      else {
+
+        return new Response(`${numOfRooms}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "text/plain"
+          }
+        });
+      };
+    }else {
+
+      numOfRooms += 1;
+
+      return new Response(`${numOfRooms}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "content-type": "text/plain"
+        }
+      });
+    };
+    
   },
   error () {
     return new Response("error in http server")
@@ -27,7 +55,7 @@ Bun.serve({
     if (server.upgrade(req, {
       data: {
         name: url.searchParams.get("name") || "unnamed",
-        room: url.searchParams.get("room") || "test"
+        room: url.searchParams.get("room") || "unspecified room"
       }
     })) {
       return;
