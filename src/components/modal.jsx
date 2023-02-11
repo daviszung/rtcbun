@@ -49,11 +49,11 @@ export function Modal({setRoomID, setName}) {
     <div id="myModal" className={s.modal}>
       <div className={s.container}>
         <h2 className={s.heading}>Name:</h2>
-        <input id="nameInput" className={s.inputField} maxLength="15"></input>
+        <input id="nameInput" className={s.inputField} maxLength="15" autoComplete="off"></input>
       </div>
       <div className={s.container}>
         <h3 className={s.heading}>Join Room:</h3>
-        <input id="joinRoomInput" className={s.inputField} maxLength="4" type="number"></input>
+        <input id="joinRoomInput" className={s.inputField} maxLength="4" type="number" autoComplete="off"></input>
       </div>
       <div className={s.optionsBtns}>
         <button id="createBtn" className={s.createBtn} onClick={() => {

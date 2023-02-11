@@ -3,9 +3,10 @@ let numOfRooms = 0;
 
 // http server
 Bun.serve({
+
   port: 5000,
+
   fetch(req, server) {
-    console.log({req})
     const url = new URL(req.url);
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name')
@@ -20,7 +21,6 @@ Bun.serve({
         });
       }
       else {
-
         return new Response(`${numOfRooms}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -28,7 +28,7 @@ Bun.serve({
           }
         });
       };
-    }else {
+    } else {
 
       numOfRooms += 1;
 
@@ -41,6 +41,7 @@ Bun.serve({
     };
     
   },
+
   error () {
     return new Response("error in http server")
   }
@@ -50,6 +51,7 @@ Bun.serve({
 // websocket server
 Bun.serve({
   port: 8080,
+
   fetch(req, server) {
     const url = new URL(req.url);
     if (server.upgrade(req, {
@@ -62,6 +64,7 @@ Bun.serve({
     }
     return new Response("Expected a websocket connection", { status: 400 })
   },
+
   websocket: {
     open(ws) {
 
@@ -93,7 +96,7 @@ Bun.serve({
 
     close(ws, code, reason) {
 
-      console.log(`connection closed in room ${ws.data?.room}`);
+      console.log(`connection closed in room ${ws.data?.room}: ${reason}`);
 
       const messageObject = {
         name: "SERVER",
