@@ -29,6 +29,7 @@ function App() {
 
   return (
     <div className={s.app}>
+      <div className={s.backdrop}></div>
       <Modal setRoomID={setRoomID} setName={setName}></Modal>
       <Main></Main>
       <Chat list={list} socket={socket} roomID={roomID}></Chat>
