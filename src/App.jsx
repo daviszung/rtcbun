@@ -3,26 +3,8 @@ import { useState, useEffect } from 'react';
 
 // components
 import { Modal } from "./components/modal";
-import { Chat } from './components/Chat.jsx'
-
-// const constraints = {
-//   audio: true,
-//   video: true,
-// };
-
-// window.navigator.mediaDevices.getUserMedia(constraints)
-//   .then((stream) => {
-//     console.log(stream.getAudioTracks())
-//     console.log(stream.getVideoTracks())
-//   });
-
-async function createAndSendOffer() {
-  const sender = new RTCPeerConnection();
-
-  const result = await sender.createOffer();
-
-  console.log({result})
-};
+import { Chat } from './components/chat'
+import { Main } from "./components/main";
 
 
 function App() {
@@ -48,8 +30,7 @@ function App() {
   return (
     <div className={s.app}>
       <Modal setRoomID={setRoomID} setName={setName}></Modal>
-      <div className={s.left}>
-      </div>
+      <Main></Main>
       <Chat list={list} socket={socket} roomID={roomID}></Chat>
     </div>
   );

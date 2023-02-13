@@ -1,0 +1,11 @@
+.videoBtn {
+  border-radius: 50px;
+
+}
+
+.main {
+  border: 1px solid white;
+  width: 85%;
+  height: 100%;
+  resize: both;
+}

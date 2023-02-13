@@ -1,7 +1,7 @@
 // track the number of rooms
 let numOfRooms = 0;
 
-// http server
+// regular http server
 Bun.serve({
 
   port: 5000,
