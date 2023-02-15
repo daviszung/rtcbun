@@ -1,6 +1,18 @@
 // track the number of rooms
 let numOfRooms = 0;
 
+// JSON detection
+function isJSON(str) {
+  try {
+    JSON.parse(str);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // regular http server
 Bun.serve({
 
@@ -84,14 +96,19 @@ Bun.serve({
 
     message(ws, message) {
 
-      const messageObject = {
-        name: ws.data?.name,
-        message: message
-      };
-
-      const messageString = JSON.stringify(messageObject);
-
-      ws.publish(ws.data.room, messageString);
+      if (isJSON(message)) {
+        console.log('video request')
+        ws.publish(ws.data.room, message)
+      } else {
+        const messageObject = {
+          name: ws.data?.name,
+          message: message
+        };
+  
+        const messageString = JSON.stringify(messageObject);
+  
+        ws.publish(ws.data.room, messageString);
+      };      
     },
 
     close(ws, code, reason) {
