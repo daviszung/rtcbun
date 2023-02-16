@@ -18,7 +18,6 @@ function establishRTC(data, socket) {
       socket.send(JSON.stringify(answer));
     })
   } else if (data.type === "answer") {
-    console.log('answerrrrr')
     pc.setRemoteDescription(new RTCSessionDescription(data));
     console.log({pc})
   }

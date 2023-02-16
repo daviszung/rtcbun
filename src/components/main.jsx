@@ -11,6 +11,7 @@ const servers = {
 };
 export const pc = new RTCPeerConnection(servers);
 
+
 // gets information about the client's video and audio devices
 async function getMediaTracks() {
   const constraints = {
@@ -21,6 +22,7 @@ async function getMediaTracks() {
   const ms = await window.navigator.mediaDevices.getUserMedia(constraints)
   
   const tracks = ms.getTracks();
+  console.log({tracks})
 
   return tracks;
 };
@@ -35,8 +37,6 @@ tracks.forEach((track) => {
 // sends an RTC offer to the ws server
 async function createAndSendOffer(socket) {
   if (!socket) return;
-
-  console.log(pc.getSenders())
 
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
