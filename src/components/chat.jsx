@@ -11,13 +11,17 @@ function sendInput(socket) {
 }
 
 
-export function Chat({list, socket, roomID}) {
+export function Chat({list, socket, roomID, occupants}) {
+  console.log(occupants)
 
   return (
     <div className={s.chat}>
-      <div className={s.roomIDContainer}>
-        <p>Room: {roomID}</p>
-      </div>
+      <ul className={s.roomIDContainer}>
+        <li>Room: {roomID}</li>
+        {occupants && occupants.map((name, index) => 
+        <li key={index}>{name}</li>
+        )}
+      </ul>
       <ul className={s.list}>
         {list.map((msg, index) => 
         <li key={index} className={s.message}>

@@ -29,6 +29,8 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [list, setList] = useState([]);
   const [roomID, setRoomID] = useState(null);
+  const [pc, setPC] = useState(null);
+  const [occupants, setOccupants] = useState([]);
 
 
   // when the roomID is updated, the client creates/joins a
@@ -39,9 +41,14 @@ function App() {
       tempSocket.onmessage = ({ data }) => {
         console.log("message received ", data)
         data = JSON.parse(data)
-        if (data.hasOwnProperty("type")) {
+        if (data?.type === "USER JOIN/EXIT") {
+          setOccupants([...data.occupants])
+          setList(list => [...list, data])
+        } 
+        else if (data?.type === "RTC") {
           establishRTC(data, tempSocket)
-        } else {
+        }
+        else {
           setList(list => [...list, data])
         }
       };
@@ -52,9 +59,9 @@ function App() {
   return (
     <div className={s.app}>
       <div className={s.backdrop}></div>
-      <Modal setRoomID={setRoomID} setName={setName}></Modal>
+      <Modal setRoomID={setRoomID} setName={setName} occupants={occupants} setOccupants={setOccupants}></Modal>
       <Main socket={socket}></Main>
-      <Chat list={list} socket={socket} roomID={roomID}></Chat>
+      <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}></Chat>
     </div>
   );
 }

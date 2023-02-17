@@ -19,30 +19,35 @@ function closeModal() {
   backdrop.style.display = "none";
 };
 
-export function Modal({setRoomID, setName}) {
+export function Modal({setRoomID, setName, occupants, setOccupants}) {
 
   // only works if the user has input a name
   // creates a new room by getting a room number from the http server
   // puts the user into the new room
   async function createRoom(name) {
     let data = await fetch(`http://localhost:5000/?name=${name}`);
-    data = await data.text();
+    console.log(data)
+    data = await data.json();
+    console.log(data)
     setName(name);
-    setRoomID(data);
+    setRoomID(data.message);
+    setOccupants([data.occupants]);
   };
 
   // puts the user into a requested room
-  // TODO: Make sure that the requested room exists
   async function joinRoom(name, roomToJoin) {
     
     let data = await fetch(`http://localhost:5000/?name=${name}&roomReq=${roomToJoin}`)
-    data = await data.text();
+    console.log(data)
+    data = await data.json();
     console.log({data})
-    if (data === "Requested room does not exist") {
-      alert(data)
-    } else {
+    if (data.status !== 200) {
+      alert(data.message)
+    } 
+    else {
       setName(name);
       setRoomID(roomToJoin);
+      setOccupants([...data.occupants])
       closeModal();
     }
   };
