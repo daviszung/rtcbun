@@ -37,10 +37,8 @@ export function Modal({setRoomID, setName, occupants, setOccupants}) {
   // puts the user into a requested room
   async function joinRoom(name, roomToJoin) {
     
-    let data = await fetch(`http://localhost:5000/?name=${name}&roomReq=${roomToJoin}`)
-    console.log(data)
+    let data = await fetch(`http://localhost:5000/?name=${name}&roomReq=${roomToJoin}`);
     data = await data.json();
-    console.log({data})
     if (data.status !== 200) {
       alert(data.message)
     } 
@@ -49,7 +47,7 @@ export function Modal({setRoomID, setName, occupants, setOccupants}) {
       setRoomID(roomToJoin);
       setOccupants([...data.occupants])
       closeModal();
-    }
+    };
   };
 
   return (

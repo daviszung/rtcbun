@@ -4,7 +4,7 @@ let numOfRooms = 0;
 const max = 2;
 
 // add someone to a room or create a room
-// takes a user and requested room as input, reqRoom optional
+// takes a user and requested room as input, roomReq optional
 function handleNewUser(user, roomReq = false) {
   // SUCCESS CASE: the user is creating a room
   if (!roomReq) {

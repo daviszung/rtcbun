@@ -12,7 +12,6 @@ function sendInput(socket) {
 
 
 export function Chat({list, socket, roomID, occupants}) {
-  console.log(occupants)
 
   return (
     <div className={s.chat}>
