@@ -26,9 +26,7 @@ export function Modal({setRoomID, setName, occupants, setOccupants}) {
   // puts the user into the new room
   async function createRoom(name) {
     let data = await fetch(`http://localhost:5000/?name=${name}`);
-    console.log(data)
     data = await data.json();
-    console.log(data)
     setName(name);
     setRoomID(data.message);
     setOccupants([data.occupants]);

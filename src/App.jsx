@@ -7,7 +7,26 @@ import { Chat } from './components/chat'
 import { Main } from "./components/main";
 
 // RTC
-import { pc } from "./components/main"
+// STUN server configuration
+const servers = {
+  iceServers: [
+    {
+      urls: "stun:stun.l.google.com:19302"
+    },
+  ],
+  iceCandidatePoolSize: 10,
+};
+
+// RTC Peer Connection
+const pc = new RTCPeerConnection(servers);
+
+pc.onicecandidate = event => {
+  if (event.candidate) {
+    console.log('ICE candidate:', event.candidate);
+    // Send the candidate to the remote peer via signaling server
+  }
+};
+
 
 function establishRTC(data, socket) {
   if (data.type === "offer") {
