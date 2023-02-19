@@ -20,7 +20,6 @@ function closeModal() {
 };
 
 export function Modal({setRoomID, setName, occupants, setOccupants}) {
-
   // only works if the user has input a name
   // creates a new room by getting a room number from the http server
   // puts the user into the new room
@@ -39,7 +38,7 @@ export function Modal({setRoomID, setName, occupants, setOccupants}) {
     data = await data.json();
     if (data.status !== 200) {
       alert(data.message)
-    } 
+    }
     else {
       setName(name);
       setRoomID(roomToJoin);

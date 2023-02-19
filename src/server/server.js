@@ -40,6 +40,20 @@ function handleNewUser(user, roomReq = false) {
   // the room that the user is trying to join exists
   else if (rooms[roomReq]) {
     const occupants = rooms[roomReq].length;
+    // FAIL CASE: the user is trying to join with the same name as someone else in the room
+    for (let i = 0; i < rooms[roomReq].length; i++) {
+      if (user === rooms[roomReq][i]) {
+        return new Response(JSON.stringify({
+          status: 500,
+          message: `${user} tried to join a room without a unique name`,
+        }), {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "application/json"
+          }
+        });
+      }
+    }
     // SUCCESS CASE: if the room can fit the user, add them to the room
     if (occupants < max) {
       rooms[roomReq].push(user);
@@ -54,7 +68,7 @@ function handleNewUser(user, roomReq = false) {
           "content-type": "application/json"
         }
       });
-    } 
+    }
     // FAIL CASE: the user is trying to join a room that is full
     else {
       console.log(`${user} tried to join a room that is full`);
@@ -195,8 +209,9 @@ Bun.serve({
 
       console.log(`connection closed in room ${ws.data?.room}`);
 
-      // remove user from room
-      rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name)
+      // remove user from room and wsRoom
+      rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name);
+      wsRooms[ws.data.room] = wsRooms[ws.data.room].filter(el => el.data.name !== ws.data.name);
 
       const messageObject = {
         type: "USER JOIN/EXIT",
