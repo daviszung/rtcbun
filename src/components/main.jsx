@@ -18,10 +18,10 @@ async function createAndSendOffer(socket) {
   }))
 };
 
-export function Main({socket}) {
+export function Main({socket, localVideoRef, remoteVideoRef}) {
   return (
     <div className={s.main}>
-      {/* <div>
+      <div>
           <video
               style={{
                   width: 240,
@@ -44,7 +44,7 @@ export function Main({socket}) {
               ref={remoteVideoRef}
               autoPlay
           ></video>
-      </div> */}
+      </div>
       <button className={s.videoBtn} onClick={() => {
         createAndSendOffer(socket)
       }}>offer</button>

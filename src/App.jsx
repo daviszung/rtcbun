@@ -1,5 +1,5 @@
 import s from "./styles/App.module.css";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // components
 import { Modal } from "./components/modal";
@@ -20,29 +20,8 @@ const servers = {
 // RTC Peer Connection
 export const pc = new RTCPeerConnection(servers);
 
-// gets information about the client's video and audio devices
-async function getMediaTracks() {
-  const constraints = {
-    audio: true,
-    video: true,
-  };
-
-  const ms = await window.navigator.mediaDevices.getUserMedia(constraints)
-  
-  const tracks = ms.getTracks();
-
-  return tracks;
-};
-
-// add tracks to RTC Object
-const tracks = await getMediaTracks();
-tracks.forEach((track) => {
-  pc.addTrack(track)
-});
-
 function handleIceCandidate(event, socket) {
   if (event.candidate) {
-    console.log("new ice candidate: ", event.candidate)
     // Send the candidate to the remote peer via signaling server
     socket.send(JSON.stringify({
       type: "candidate",
@@ -111,7 +90,27 @@ function App() {
   const [roomID, setRoomID] = useState(null);
   const [occupants, setOccupants] = useState([]);
 
+  let localVideoRef = useRef(null);
+  let remoteVideoRef = useRef(null);
 
+  // gets information about the client's video and audio devices
+  window.navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  })
+  .then(stream => {
+    if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+
+    stream.getTracks().forEach(track => {
+      pc.addTrack(track, stream);
+    });
+
+    pc.ontrack = ev => {
+      console.log("add remotetrack success");
+      if (remoteVideoRef.current)
+          remoteVideoRef.current.srcObject = ev.streams[0];
+    };
+  });
 
   // when the roomID is updated, the client creates/joins a
   // room with a ws connection
@@ -143,7 +142,6 @@ function App() {
       // icecandidate
       pc.onicecandidate = e => {
         handleIceCandidate(e, websocket)
-
       };
       setSocket(websocket)
     }
@@ -153,7 +151,7 @@ function App() {
     <div className={s.app}>
       <div className={s.backdrop}></div>
       <Modal setRoomID={setRoomID} setName={setName} occupants={occupants} setOccupants={setOccupants}></Modal>
-      <Main socket={socket}></Main>
+      <Main socket={socket} localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}></Main>
       <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}></Chat>
     </div>
   );

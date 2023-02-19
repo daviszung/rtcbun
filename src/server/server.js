@@ -172,7 +172,6 @@ Bun.serve({
         } else if (message.type === "candidate") {
           wsRooms[ws.data.room].forEach((socket) => {
             if (socket.data.name !== ws.data.name) {
-              console.log(message.data)
               socket.send(JSON.stringify({
                 type: "server-candidate",
                 candidate: message.data
