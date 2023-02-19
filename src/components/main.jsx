@@ -21,26 +21,15 @@ async function createAndSendOffer(socket) {
 export function Main({socket, localVideoRef, remoteVideoRef}) {
   return (
     <div className={s.main}>
-      <div>
+      <div className={s.videos}>
           <video
-              style={{
-                  width: 240,
-                  height: 240,
-                  margin: 5,
-                  backgroundColor: "black",
-              }}
-              muted
+              className={s.localVideo}
               ref={localVideoRef}
               autoPlay
+              muted
           ></video>
           <video
-              id="remotevideo"
-              style={{
-                  width: 240,
-                  height: 240,
-                  margin: 5,
-                  backgroundColor: "black",
-              }}
+              className={s.remoteVideo}
               ref={remoteVideoRef}
               autoPlay
           ></video>

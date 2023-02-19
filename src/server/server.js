@@ -149,7 +149,6 @@ Bun.serve({
     message(ws, message) {
       // receiving offer or answer
       if (isJSON(message)) {
-        console.log(`json received from ${ws.data.name}`)
         message = JSON.parse(message)
         if (message.type === "offer") {
           wsRooms[ws.data.room].forEach((socket) => {
