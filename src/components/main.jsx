@@ -10,8 +10,6 @@ async function createAndSendOffer(socket) {
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
 
-  console.log("created offer: ", offer);
-
   socket.send(JSON.stringify({
     type: "offer",
     sdp: pc.localDescription.sdp

@@ -30,10 +30,6 @@ function handleIceCandidate(event, socket) {
   }
 }
 
-pc.oniceconnectionstatechange = (e) => {
-  console.log("iceConnectionStateChange", e)
-}
-
 async function createAnswer (sdp, socket) {
 
   await pc.setRemoteDescription(new RTCSessionDescription({
@@ -47,8 +43,6 @@ async function createAnswer (sdp, socket) {
     offerToReceiveAudio: true,
   });
 
-  console.log(answer.sdp)
-
   await pc.setLocalDescription(new RTCSessionDescription(answer));
 
   // send answer to server
@@ -60,27 +54,6 @@ async function handleAnswer (sdp) {
     type: "answer",
     sdp: sdp
   }));
-  console.log({pc})
-  let localDesc = pc.localDescription;
-  let lines = localDesc.sdp.split('\n');
-  let candidates = [];
-  for (let line of lines) {
-    if (line.startsWith('a=candidate:')) {
-      candidates.push(line);
-    }
-  }
-  console.log('Local ICE candidates:', candidates);
-
-  let remoteDesc = pc.remoteDescription;
-  let linesx = remoteDesc.sdp.split('\n');
-  let candidatesx = [];
-  for (let line of linesx) {
-    if (line.startsWith('a=candidate:')) {
-      candidatesx.push(line);
-    }
-  }
-  console.log('Remote ICE candidates:', candidatesx);
-
 };
 
 function App() {
@@ -106,7 +79,6 @@ function App() {
     });
 
     pc.ontrack = ev => {
-      console.log("add remotetrack success");
       if (remoteVideoRef.current)
           remoteVideoRef.current.srcObject = ev.streams[0];
     };
@@ -118,7 +90,6 @@ function App() {
     if (name && roomID) {
       const websocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
       websocket.onmessage = ({ data }) => {
-        console.log("message received ", data)
         data = JSON.parse(data)
         if (data?.type === "USER JOIN/EXIT") {
           setOccupants([...data.occupants])
@@ -132,7 +103,6 @@ function App() {
         }
         else if (data?.type === "server-candidate") {
           pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(() => {
-            console.log('new candidate added')
           })
         }
         else {
