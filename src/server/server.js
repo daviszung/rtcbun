@@ -147,20 +147,16 @@ Bun.serve({
 
       ws.subscribe(ws.data.room);
 
-      const messageObject = {
+      ws.publish(ws.data.room, JSON.stringify({
         type: "USER JOIN/EXIT",
         name: "SERVER",
         message: `${ws.data?.name} joined the room`,
         occupants: rooms[ws.data.room]
-      };
-
-      const joinMessage = JSON.stringify(messageObject);
-
-      ws.publish(ws.data.room, joinMessage);
+      }));
     },
 
     message(ws, message) {
-      // receiving offer or answer
+      // receiving offer, answer, or candidate
       if (isJSON(message)) {
         message = JSON.parse(message)
         if (message.type === "offer") {
@@ -192,16 +188,12 @@ Bun.serve({
           })
         }
       }
-      // receiving normal chat messages
+      // receiving normal chat messages and sending them in the chat
       else {
-        const messageObject = {
+        ws.publish(ws.data.room, JSON.stringify({
           name: ws.data?.name,
           message: message
-        };
-  
-        const messageString = JSON.stringify(messageObject);
-  
-        ws.publish(ws.data.room, messageString);
+        }));
       };      
     },
 
@@ -213,16 +205,12 @@ Bun.serve({
       rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name);
       wsRooms[ws.data.room] = wsRooms[ws.data.room].filter(el => el.data.name !== ws.data.name);
 
-      const messageObject = {
+      ws.publish(ws.data.room, JSON.stringify({
         type: "USER JOIN/EXIT",
         name: "SERVER",
         message: `${ws.data?.name} left the room`,
         occupants: rooms[ws.data.room]
-      };
-
-      const closeMessage = JSON.stringify(messageObject);
-
-      ws.publish(ws.data.room, closeMessage);
+      }));
     },
 
     drain(ws) {
