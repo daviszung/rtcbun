@@ -18,60 +18,134 @@ const servers = {
 };
 
 // RTC Peer Connection
-const pc = new RTCPeerConnection(servers);
+export const pc = new RTCPeerConnection(servers);
 
-pc.onicecandidate = event => {
-  if (event.candidate) {
-    console.log('ICE candidate:', event.candidate);
-    // Send the candidate to the remote peer via signaling server
-  }
+// gets information about the client's video and audio devices
+async function getMediaTracks() {
+  const constraints = {
+    audio: true,
+    video: true,
+  };
+
+  const ms = await window.navigator.mediaDevices.getUserMedia(constraints)
+  
+  const tracks = ms.getTracks();
+
+  return tracks;
 };
 
+// add tracks to RTC Object
+const tracks = await getMediaTracks();
+tracks.forEach((track) => {
+  pc.addTrack(track)
+});
 
-function establishRTC(data, socket) {
-  if (data.type === "offer") {
-    pc.setRemoteDescription(new RTCSessionDescription(data));
-    pc.createAnswer().then(answer => {
-      pc.setLocalDescription(answer);
-      console.log(answer)
-      socket.send(JSON.stringify(answer));
-    })
-  } else if (data.type === "answer") {
-    pc.setRemoteDescription(new RTCSessionDescription(data));
-    console.log({pc})
+function handleIceCandidate(event, socket) {
+  if (event.candidate) {
+    console.log("new ice candidate: ", event.candidate)
+    // Send the candidate to the remote peer via signaling server
+    socket.send(JSON.stringify({
+      type: "candidate",
+      data: event.candidate
+    }))
   }
 }
 
+pc.oniceconnectionstatechange = (e) => {
+  console.log("iceConnectionStateChange", e)
+}
+
+async function createAnswer (sdp, socket) {
+
+  await pc.setRemoteDescription(new RTCSessionDescription({
+    type: "offer",
+    sdp: sdp
+  }))
+
+  // create answer
+  const answer = await pc.createAnswer({
+    offerToReceiveVideo: true,
+    offerToReceiveAudio: true,
+  });
+
+  console.log(answer.sdp)
+
+  await pc.setLocalDescription(new RTCSessionDescription(answer));
+
+  // send answer to server
+  socket.send(JSON.stringify(answer));
+};
+
+async function handleAnswer (sdp) {
+  await pc.setRemoteDescription(new RTCSessionDescription({
+    type: "answer",
+    sdp: sdp
+  }));
+  console.log({pc})
+  let localDesc = pc.localDescription;
+  let lines = localDesc.sdp.split('\n');
+  let candidates = [];
+  for (let line of lines) {
+    if (line.startsWith('a=candidate:')) {
+      candidates.push(line);
+    }
+  }
+  console.log('Local ICE candidates:', candidates);
+
+  let remoteDesc = pc.remoteDescription;
+  let linesx = remoteDesc.sdp.split('\n');
+  let candidatesx = [];
+  for (let line of linesx) {
+    if (line.startsWith('a=candidate:')) {
+      candidatesx.push(line);
+    }
+  }
+  console.log('Remote ICE candidates:', candidatesx);
+
+};
 
 function App() {
   const [name, setName] = useState(null);
   const [socket, setSocket] = useState(null);
   const [list, setList] = useState([]);
   const [roomID, setRoomID] = useState(null);
-  const [pc, setPC] = useState(null);
   const [occupants, setOccupants] = useState([]);
+
 
 
   // when the roomID is updated, the client creates/joins a
   // room with a ws connection
   useEffect(() => {
     if (name && roomID) {
-      const tempSocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
-      tempSocket.onmessage = ({ data }) => {
+      const websocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
+      websocket.onmessage = ({ data }) => {
         console.log("message received ", data)
         data = JSON.parse(data)
         if (data?.type === "USER JOIN/EXIT") {
           setOccupants([...data.occupants])
           setList(list => [...list, data])
         } 
-        else if (data?.type === "RTC") {
-          establishRTC(data, tempSocket)
+        else if (data?.type === "server-offer") {
+          createAnswer(data.sdp, websocket)
+        }
+        else if (data?.type === "server-answer") {
+          handleAnswer(data.sdp)
+        }
+        else if (data?.type === "server-candidate") {
+          pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(() => {
+            console.log('new candidate added')
+          })
         }
         else {
           setList(list => [...list, data])
         }
       };
-      setSocket(tempSocket)
+      // icecandidate
+      pc.onicecandidate = e => {
+        handleIceCandidate(e, websocket)
+
+      };
+      setSocket(websocket)
     }
   }, [roomID])
 

@@ -1,5 +1,6 @@
 // rooms contain up to two users
 let rooms = {};
+let wsRooms = {};
 let numOfRooms = 0;
 const max = 2;
 
@@ -84,6 +85,7 @@ function isJSON(str) {
 }
 
 // regular http server
+// helps users create or join rooms
 Bun.serve({
 
   port: 5000,
@@ -122,6 +124,12 @@ Bun.serve({
   websocket: {
     open(ws) {
 
+      if (wsRooms[ws.data.room]) {
+        wsRooms[ws.data.room].push(ws)
+      } else {
+        wsRooms[ws.data.room] = [ws];
+      };
+
       console.log(`New ws connection, user (${ws.data?.name}) subscribed to room (${ws.data?.room})`);
 
       ws.subscribe(ws.data.room);
@@ -139,11 +147,42 @@ Bun.serve({
     },
 
     message(ws, message) {
-
+      // receiving offer or answer
       if (isJSON(message)) {
-        console.log(`video request from ${ws.data.name}`)
-        ws.publish(ws.data.room, message)
-      } else {
+        console.log(`json received from ${ws.data.name}`)
+        message = JSON.parse(message)
+        if (message.type === "offer") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              socket.send(JSON.stringify({
+                type: "server-offer",
+                sdp: message.sdp
+              }))
+            };
+          })
+        } else if (message.type === "answer") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              socket.send(JSON.stringify({
+                type: "server-answer",
+                sdp: message.sdp
+              }))
+            }
+          })
+        } else if (message.type === "candidate") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              console.log(message.data)
+              socket.send(JSON.stringify({
+                type: "server-candidate",
+                candidate: message.data
+              }))
+            }
+          })
+        }
+      }
+      // receiving normal chat messages
+      else {
         const messageObject = {
           name: ws.data?.name,
           message: message
@@ -155,9 +194,9 @@ Bun.serve({
       };      
     },
 
-    close(ws, code, reason) {
+    close(ws) {
 
-      console.log(`connection closed in room ${ws.data?.room}: ${reason}`);
+      console.log(`connection closed in room ${ws.data?.room}`);
 
       // remove user from room
       rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name)
