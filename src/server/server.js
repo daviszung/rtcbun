@@ -43,7 +43,6 @@ function handleNewUser(user, roomReq = false) {
     // SUCCESS CASE: if the room can fit the user, add them to the room
     if (occupants < max) {
       rooms[roomReq].push(user);
-      console.log(rooms[roomReq])
       console.log(`added ${user} to room ${roomReq}`)
       return new Response(JSON.stringify({
         status: 200,
