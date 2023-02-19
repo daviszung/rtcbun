@@ -20,9 +20,9 @@ const servers = {
 // RTC Peer Connection
 export const pc = new RTCPeerConnection(servers);
 
+// when an ice candidate is found it is sent to the server
 function handleIceCandidate(event, socket) {
   if (event.candidate) {
-    // Send the candidate to the remote peer via signaling server
     socket.send(JSON.stringify({
       type: "candidate",
       data: event.candidate
@@ -70,7 +70,7 @@ function App() {
   let remoteVideoRef = useRef(null);
 
   // this code only runs once, if it ran every time there was a re-render
-  // then the video would flicker every time a message was sent
+  // the video would flicker off/on every time a message was sent
   useEffect(() => {
     window.navigator.mediaDevices.getUserMedia({
       video: true,
@@ -83,46 +83,52 @@ function App() {
         pc.addTrack(track, stream);
       });
   
-      pc.ontrack = ev => {
+      pc.ontrack = event => {
         if (remoteVideoRef.current)
-            remoteVideoRef.current.srcObject = ev.streams[0];
+            remoteVideoRef.current.srcObject = event.streams[0];
       };
     });
-  }, [])
+  }, []);
   
 
   // when the roomID is updated, the client creates/joins a
   // room with a ws connection
   useEffect(() => {
     if (name && roomID) {
-      const websocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`)
+      // create the websocket connection
+      const websocket = new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`);
+
+      // determine how data from the server is handled
       websocket.onmessage = ({ data }) => {
-        data = JSON.parse(data)
+
+        data = JSON.parse(data);
+
         if (data?.type === "USER JOIN/EXIT") {
-          setOccupants([...data.occupants])
-          setList(list => [...list, data])
+          setOccupants([...data.occupants]);
+          setList(list => [...list, data]);
         } 
         else if (data?.type === "server-offer") {
-          createAnswer(data.sdp, websocket)
+          createAnswer(data.sdp, websocket);
         }
         else if (data?.type === "server-answer") {
-          handleAnswer(data.sdp)
+          handleAnswer(data.sdp);
         }
         else if (data?.type === "server-candidate") {
-          pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(() => {
-          })
+          pc.addIceCandidate(new RTCIceCandidate(data.candidate));
         }
         else {
-          setList(list => [...list, data])
+          setList(list => [...list, data]);
         }
       };
-      // icecandidate
+
+      // icecandidate event
       pc.onicecandidate = e => {
-        handleIceCandidate(e, websocket)
+        handleIceCandidate(e, websocket);
       };
-      setSocket(websocket)
-    }
-  }, [roomID])
+
+      setSocket(websocket);
+    };
+  }, [roomID]);
 
   return (
     <div className={s.app}>

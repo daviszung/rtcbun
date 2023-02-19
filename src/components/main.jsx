@@ -2,14 +2,14 @@ import s from '../styles/components/main.module.css'
 
 import { pc } from '../App.jsx'
 
-// sends an RTC offer to the ws server
-async function createAndSendOffer(socket) {
+async function createOffer(socket) {
   if (!socket) return;
 
   // creates the offer
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
 
+  // send the offer
   socket.send(JSON.stringify({
     type: "offer",
     sdp: pc.localDescription.sdp
@@ -33,7 +33,7 @@ export function Main({socket, localVideoRef, remoteVideoRef}) {
         ></video>
       </div>
       <button className={s.videoBtn} onClick={() => {
-        createAndSendOffer(socket)
+        createOffer(socket)
       }}>offer</button>
     </div>
   );
