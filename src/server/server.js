@@ -1,6 +1,6 @@
 // rooms contain up to two users
-let rooms = {};
-let wsRooms = {};
+const rooms = {};
+const wsRooms = {};
 let numOfRooms = 0;
 const max = 2;
 
@@ -41,7 +41,7 @@ function handleNewUser(user, roomReq = false) {
   else if (rooms[roomReq]) {
     const occupants = rooms[roomReq].length;
     // FAIL CASE: the user is trying to join with the same name as someone else in the room
-    for (let i = 0; i < rooms[roomReq].length; i++) {
+    for (let i = 0; i < occupants; i++) {
       if (user === rooms[roomReq][i]) {
         return new Response(JSON.stringify({
           status: 500,

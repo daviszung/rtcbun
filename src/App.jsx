@@ -14,7 +14,7 @@ const servers = {
       urls: "stun:stun.l.google.com:19302"
     },
   ],
-  iceCandidatePoolSize: 10,
+  iceCandidatePoolSize: 8,
 };
 
 // RTC Peer Connection
@@ -32,6 +32,7 @@ function handleIceCandidate(event, socket) {
 
 async function createAnswer (sdp, socket) {
 
+  // set the remote description using the offer from the peer client
   await pc.setRemoteDescription(new RTCSessionDescription({
     type: "offer",
     sdp: sdp
@@ -43,6 +44,7 @@ async function createAnswer (sdp, socket) {
     offerToReceiveAudio: true,
   });
 
+  // set the local description with the client's answer
   await pc.setLocalDescription(new RTCSessionDescription(answer));
 
   // send answer to server
@@ -50,6 +52,7 @@ async function createAnswer (sdp, socket) {
 };
 
 async function handleAnswer (sdp) {
+  // sets the remote description with the answer from the peer client
   await pc.setRemoteDescription(new RTCSessionDescription({
     type: "answer",
     sdp: sdp
