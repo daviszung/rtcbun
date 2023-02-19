@@ -133,7 +133,7 @@ function App() {
   return (
     <div className={s.app}>
       <div className={s.backdrop}></div>
-      <Modal setRoomID={setRoomID} setName={setName} occupants={occupants} setOccupants={setOccupants}></Modal>
+      <Modal setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}></Modal>
       <Main socket={socket} localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}></Main>
       <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}></Chat>
     </div>

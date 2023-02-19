@@ -22,7 +22,7 @@ function handleNewUser(user, roomReq = false) {
         "content-type": "application/json"
       }
     });
-  }
+  };
   // cases for if the user is trying to join a room
   // FAIL CASE: the user tries to join a room that doesn't exist
   if (!rooms[roomReq]) {
@@ -108,19 +108,21 @@ Bun.serve({
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
     // sends a Response object containing text information about how the data was handled
-    return handleNewUser(name, roomReq)
+    return handleNewUser(name, roomReq);
   },
 
   error (err) {
-    return new Response(`error in http server: ${err}`)
+    return new Response(`error in http server: ${err}`);
   }
 });
 
 
 // websocket server
 Bun.serve({
+
   port: 8080,
 
+  // upgrade from http to ws
   fetch(req, server) {
     const url = new URL(req.url);
     if (server.upgrade(req, {
@@ -131,22 +133,26 @@ Bun.serve({
     })) {
       return;
     }
-    return new Response("Expected a websocket connection", { status: 400 })
+    return new Response("Expected a websocket connection", { status: 400 });
   },
 
+  // websocket logic
   websocket: {
-    open(ws) {
 
+    open(ws) {
+      // put new users into their room
       if (wsRooms[ws.data.room]) {
-        wsRooms[ws.data.room].push(ws)
+        wsRooms[ws.data.room].push(ws);
       } else {
         wsRooms[ws.data.room] = [ws];
       };
 
       console.log(`New ws connection, user (${ws.data?.name}) subscribed to room (${ws.data?.room})`);
 
+      // subscribe to the room
       ws.subscribe(ws.data.room);
 
+      // notify the room that the user has joined
       ws.publish(ws.data.room, JSON.stringify({
         type: "USER JOIN/EXIT",
         name: "SERVER",
@@ -188,7 +194,7 @@ Bun.serve({
           })
         }
       }
-      // receiving normal chat messages and sending them in the chat
+      // send normal chat messages
       else {
         ws.publish(ws.data.room, JSON.stringify({
           name: ws.data?.name,
@@ -205,6 +211,7 @@ Bun.serve({
       rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name);
       wsRooms[ws.data.room] = wsRooms[ws.data.room].filter(el => el.data.name !== ws.data.name);
 
+      // notify the room that the user has left
       ws.publish(ws.data.room, JSON.stringify({
         type: "USER JOIN/EXIT",
         name: "SERVER",
@@ -217,6 +224,7 @@ Bun.serve({
       console.log("Please send me data. I am ready to receive it.")
     }
   },
+
   error() {
     console.log("Error in WebSocket Server")
     return new Response("Error in WebSocket Server")

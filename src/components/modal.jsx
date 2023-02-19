@@ -3,12 +3,12 @@ import s from "../styles/components/modal.module.css"
 // takes an id and checks the DOM for an element with that id. If the
 // element has a value, returns the value, for blank values, returns false
 function checkInput(id) {
-  const input = document.querySelector(`#${id}`)
+  const input = document.querySelector(`#${id}`);
   if (input.value.length > 0) {
     return input.value;
   } else {
     return false;
-  }
+  };
 };
 
 // closes the modal
@@ -19,8 +19,8 @@ function closeModal() {
   backdrop.style.display = "none";
 };
 
-export function Modal({setRoomID, setName, occupants, setOccupants}) {
-  // only works if the user has input a name
+export function Modal({setRoomID, setName, setOccupants}) {
+  // only works if the user has input a unique name
   // creates a new room by getting a room number from the http server
   // puts the user into the new room
   async function createRoom(name) {
@@ -61,16 +61,16 @@ export function Modal({setRoomID, setName, occupants, setOccupants}) {
         <button id="createBtn" className={s.createBtn} onClick={() => {
           const name = checkInput('nameInput');
           if (name) {
-            createRoom(name)
-            closeModal()
-          }
+            createRoom(name);
+            closeModal();
+          };
         }}>Create a room</button>
         <button id="joinBtn" className={s.joinBtn} onClick={() => {
           const name = checkInput('nameInput');
           const roomToJoin = checkInput('joinRoomInput');
           if (name && roomToJoin) {
-            joinRoom(name, roomToJoin)
-          }
+            joinRoom(name, roomToJoin);
+          };
         }}>Join a room</button>
       </div>
     </div>
