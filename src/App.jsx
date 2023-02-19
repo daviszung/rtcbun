@@ -28,7 +28,7 @@ function handleIceCandidate(event, socket) {
       data: event.candidate
     }))
   }
-}
+};
 
 async function createAnswer (sdp, socket) {
 
@@ -66,23 +66,27 @@ function App() {
   let localVideoRef = useRef(null);
   let remoteVideoRef = useRef(null);
 
-  // gets information about the client's video and audio devices
-  window.navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  })
-  .then(stream => {
-    if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-
-    stream.getTracks().forEach(track => {
-      pc.addTrack(track, stream);
+  // this code only runs once, if it ran every time there was a re-render
+  // then the video would flicker every time a message was sent
+  useEffect(() => {
+    window.navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    })
+    .then(stream => {
+      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+  
+      stream.getTracks().forEach(track => {
+        pc.addTrack(track, stream);
+      });
+  
+      pc.ontrack = ev => {
+        if (remoteVideoRef.current)
+            remoteVideoRef.current.srcObject = ev.streams[0];
+      };
     });
-
-    pc.ontrack = ev => {
-      if (remoteVideoRef.current)
-          remoteVideoRef.current.srcObject = ev.streams[0];
-    };
-  });
+  }, [])
+  
 
   // when the roomID is updated, the client creates/joins a
   // room with a ws connection
