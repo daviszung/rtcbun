@@ -1,6 +1,9 @@
 {
   "name": "bunws",
   "version": "0.1.69",
+  "scripts": {
+    "start": "bun run ./src/server/server.js"
+  },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
