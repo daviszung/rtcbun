@@ -34,7 +34,7 @@ export function Main({socket, localVideoRef, remoteVideoRef}) {
       </div>
       <button className={s.videoBtn} onClick={() => {
         createOffer(socket)
-      }}>offer</button>
+      }}>Connect</button>
     </div>
   );
 };

@@ -110,8 +110,8 @@ Bun.serve({
     const url = new URL(req.url);
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
-    console.log({url})
 
+    // initial load for html, css, and js
     if (!name && !roomReq) {
       if (url == "http://localhost:5000/") {
         // return new Response(file(path.join(__dirname, "../../dist")))
