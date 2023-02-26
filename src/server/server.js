@@ -107,10 +107,10 @@ Bun.serve({
   port: 5000,
 
   fetch(req, server) {
-    console.log({req})
     const url = new URL(req.url);
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
+    console.log({url})
 
     if (!name && !roomReq) {
       if (url == "http://localhost:5000/") {
@@ -122,21 +122,13 @@ Bun.serve({
           }
         })
       }
-      else if (url == "http://localhost:5000/bundle.css") {
-        console.log(`serving ${path.join(__dirname, "../../dist/bundle.css")}`);
-        return new Response(file(path.join(__dirname, "../../dist/bundle.css")), {
-          headers: {
-            "Content-Type": "text/css"
-          }
-        });
-      }
       else if (url == "http://localhost:5000/bundle.js") {
         console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
       }
-      else if (url == "http://localhost:5000/favicon.ico") {
-        console.log(`serving ${path.join(__dirname, "../../dist/favicon.ico")}`);
-        return new Response(file(path.join(__dirname, "../../dist/favicon.ico")));
+      else if (url == "http://localhost:5000/assets/favicon-32x32.png") {
+        console.log(`serving ${path.join(__dirname, "../../assets/favicon.ico")}`);
+        return new Response(file(path.join(__dirname, "../../assets/favicon.ico")));
       }
       
     } else {
