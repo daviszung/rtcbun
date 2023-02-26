@@ -1,5 +1,5 @@
 {
-  "name": "rtcBun",
+  "name": "rtcbun",
   "version": "0.1.0",
   "scripts": {
     "build": "./build.js",
