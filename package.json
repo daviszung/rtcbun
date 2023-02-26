@@ -11,11 +11,6 @@
     "react-dom": "^18.2.0",
     "web-vitals": "^3.0.3"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
   "devDependencies": {
     "css-tree": "^2.3.1",
     "esbuild": "^0.17.10",
