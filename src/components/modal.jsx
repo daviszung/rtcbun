@@ -14,7 +14,7 @@ function checkInput(id) {
 // closes the modal
 function closeModal() {
   const modal = document.querySelector("#myModal");
-  const backdrop = document.querySelector(".backdrop");
+  const backdrop = document.querySelector("#backdrop");
   modal.style.display = "none";
   backdrop.style.display = "none";
 };

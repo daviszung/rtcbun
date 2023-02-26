@@ -1,3 +1,6 @@
+import { file } from 'bun'
+import path from 'path';
+
 // rooms contain up to two users
 const rooms = {};
 const wsRooms = {};
@@ -104,11 +107,42 @@ Bun.serve({
   port: 5000,
 
   fetch(req, server) {
+    console.log({req})
     const url = new URL(req.url);
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
-    // sends a Response object containing text information about how the data was handled
-    return handleNewUser(name, roomReq);
+
+    if (!name && !roomReq) {
+      if (url == "http://localhost:5000/") {
+        // return new Response(file(path.join(__dirname, "../../dist")))
+        console.log(`serving ${path.join(__dirname, "../../dist/index.html")}`);
+        return new Response(file(path.join(__dirname, "../../dist/index.html")), {
+          headers: {
+            "content-type": "text/html"
+          }
+        })
+      }
+      else if (url == "http://localhost:5000/bundle.css") {
+        console.log(`serving ${path.join(__dirname, "../../dist/bundle.css")}`);
+        return new Response(file(path.join(__dirname, "../../dist/bundle.css")), {
+          headers: {
+            "Content-Type": "text/css"
+          }
+        });
+      }
+      else if (url == "http://localhost:5000/bundle.js") {
+        console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
+        return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
+      }
+      else if (url == "http://localhost:5000/favicon.ico") {
+        console.log(`serving ${path.join(__dirname, "../../dist/favicon.ico")}`);
+        return new Response(file(path.join(__dirname, "../../dist/favicon.ico")));
+      }
+      
+    } else {
+      // sends a Response object containing text information about how the data was handled
+      return handleNewUser(name, roomReq);
+    }
   },
 
   error (err) {

@@ -15,7 +15,7 @@ export function Chat({list, socket, roomID, occupants}) {
 
   return (
     <div className={s.chat}>
-      <ul className={s.roomIDContainer}>
+      <ul className={s.roomInfo}>
         <li>Room: {roomID}</li>
         {occupants && occupants.map((name, index) => 
         <li key={index}>{name}</li>
