@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Modal } from "./components/modal";
 import { Chat } from './components/chat'
 import { Main } from "./components/main";
+import { Controls } from "./components/controls";
 
 // RTC
 // STUN server configuration
@@ -133,9 +134,12 @@ function App() {
   return (
     <div className={s.app}>
       <div id="backdrop" className={s.backdrop}></div>
-      <Modal setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}></Modal>
-      <Main socket={socket} localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}></Main>
-      <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}></Chat>
+      <Modal setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}/>
+      <div className={s.container}>
+        <Main localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
+        <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}/>
+      </div>
+      <Controls socket={socket}/>
     </div>
   );
 }

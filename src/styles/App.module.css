@@ -1,7 +1,8 @@
 .app {
   display: flex;
+  flex-direction: column;
   height: 100%;
-  padding: 10rem 15rem 10rem 20rem;
+  padding: 5rem 15rem 8rem 20rem;
   background-color: #161512;
 }
 
@@ -13,4 +14,10 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
 }

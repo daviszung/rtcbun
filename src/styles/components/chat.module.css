@@ -60,6 +60,7 @@
   padding: 1rem;
   background-color: #3E3E5A;
   color: white;
+  border: 0;
 }
 
 .chatInput:focus {
