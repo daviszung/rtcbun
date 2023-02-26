@@ -1,5 +1,5 @@
 {
-  "name": "bunws",
+  "name": "rtcBun",
   "version": "0.1.0",
   "scripts": {
     "build": "./build.js",
