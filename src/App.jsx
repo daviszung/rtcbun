@@ -73,7 +73,7 @@ function App() {
   // this code only runs once, if it ran every time there was a re-render
   // the video would flicker off/on every time a message was sent
   useEffect(() => {
-    window.navigator.mediaDevices.getUserMedia({
+    window.navigator.mediaDevices?.getUserMedia({
       video: true,
       audio: true,
     })
