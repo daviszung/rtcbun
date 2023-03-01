@@ -107,6 +107,8 @@ Bun.serve({
   port: 5000,
 
   fetch(req, server) {
+    console.log({req})
+
     const url = new URL(req.url);
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
