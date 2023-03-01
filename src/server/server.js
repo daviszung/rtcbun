@@ -115,8 +115,8 @@ Bun.serve({
     if (!name && !roomReq) {
       if (url == "http://localhost:5000/") {
         // return new Response(file(path.join(__dirname, "../../dist")))
-        console.log(`serving ${path.join(__dirname, "../../dist/index.html")}`);
-        return new Response(file(path.join(__dirname, "../../dist/index.html")), {
+        console.log(`serving ${path.join(__dirname, "../../public/index.html")}`);
+        return new Response(file(path.join(__dirname, "../../public/index.html")), {
           headers: {
             "content-type": "text/html"
           }
