@@ -110,12 +110,13 @@ Bun.serve({
     console.log({req})
 
     const url = new URL(req.url);
+    console.log(url.port, url.pathname)
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
 
     // initial load for html, css, and js
     if (!name && !roomReq) {
-      if (url == "http://localhost:5000/") {
+      if (url.pathname === "/") {
         // return new Response(file(path.join(__dirname, "../../dist")))
         console.log(`serving ${path.join(__dirname, "../../public/index.html")}`);
         return new Response(file(path.join(__dirname, "../../public/index.html")), {
@@ -124,11 +125,11 @@ Bun.serve({
           }
         })
       }
-      else if (url == "http://localhost:5000/bundle.js") {
+      else if (url.pathname === "/bundle.js") {
         console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
       }
-      else if (url == "http://localhost:5000/assets/favicon-32x32.png") {
+      else if (url.pathname === "/assets/favicon-32x32.png") {
         console.log(`serving ${path.join(__dirname, "../../assets/favicon.ico")}`);
         return new Response(file(path.join(__dirname, "../../assets/favicon.ico")));
       }
