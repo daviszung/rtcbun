@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "build": "./build.js",
-    "start": "bun run ./src/server/server.js"
+    "start": "bun run ./src/server/server.js",
+    "style": "./node_modules/.bin/esbuild --bundle ./src/stylesheet.css --outfile=./dist/bundle.css"
   },
   "dependencies": {
     "path": "^0.12.7",
@@ -12,9 +13,7 @@
     "web-vitals": "^3.0.3"
   },
   "devDependencies": {
-    "css-tree": "^2.3.1",
     "esbuild": "^0.17.10",
-    "esbuild-css-modules-plugin": "^2.7.1",
     "react-refresh": "0.10.0",
     "typescript": "latest"
   }

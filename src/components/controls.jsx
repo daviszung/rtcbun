@@ -1,5 +1,3 @@
-import s from "../styles/components/controls.module.css"
-
 import { pc } from '../App.jsx'
 
 async function createOffer(socket) {
@@ -18,8 +16,8 @@ async function createOffer(socket) {
 
 export function Controls({socket}) {
   return (
-    <div className={s.outline}>
-      <button className={s.connectBtn} onClick={() => {
+    <div className="outline">
+      <button className="connectBtn" onClick={() => {
         createOffer(socket)
       }}>Connect</button>
     </div>

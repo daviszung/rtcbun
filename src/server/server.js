@@ -123,11 +123,19 @@ Bun.serve({
           headers: {
             "content-type": "text/html"
           }
-        })
+        });
       }
       else if (url.pathname === "/bundle.js") {
         console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
+      }
+      else if (url.pathname === "/dist/bundle.css") {
+        console.log(`serving ${path.join(__dirname, "../../dist/bundle.css")}`);
+        return new Response(file(path.join(__dirname, "../../dist/bundle.css")), {
+          headers: {
+            "content-type": "text/css"
+          }
+        });
       }
       else if (url.pathname === "/assets/favicon-32x32.png") {
         console.log(`serving ${path.join(__dirname, "../../assets/favicon.ico")}`);
