@@ -1,5 +1,3 @@
-import s from "../styles/components/modal.module.css"
-
 // takes an id and checks the DOM for an element with that id. If the
 // element has a value, returns the value, for blank values, returns false
 function checkInput(id) {
@@ -48,24 +46,24 @@ export function Modal({setRoomID, setName, setOccupants}) {
   };
 
   return (
-    <div id="myModal" className={s.modal}>
-      <div className={s.container}>
-        <h2 className={s.heading}>Name:</h2>
-        <input id="nameInput" className={s.inputField} maxLength="15" autoComplete="off"></input>
+    <div id="myModal" className="modal">
+      <div className="modalContainer">
+        <h2 className="heading">Name:</h2>
+        <input id="nameInput" className="inputField" maxLength="15" autoComplete="off"></input>
       </div>
-      <div className={s.container}>
-        <h3 className={s.heading}>Join Room:</h3>
-        <input id="joinRoomInput" className={s.inputField} maxLength="4" type="number" autoComplete="off"></input>
+      <div className="modalContainer">
+        <h3 className="heading">Join Room:</h3>
+        <input id="joinRoomInput" className="inputField" maxLength="4" type="number" autoComplete="off"></input>
       </div>
-      <div className={s.optionsBtns}>
-        <button id="createBtn" className={s.createBtn} onClick={() => {
+      <div className="optionsBtns">
+        <button id="createBtn" className="createBtn" onClick={() => {
           const name = checkInput('nameInput');
           if (name) {
             createRoom(name);
             closeModal();
           };
         }}>Create a room</button>
-        <button id="joinBtn" className={s.joinBtn} onClick={() => {
+        <button id="joinBtn" className="joinBtn" onClick={() => {
           const name = checkInput('nameInput');
           const roomToJoin = checkInput('joinRoomInput');
           if (name && roomToJoin) {

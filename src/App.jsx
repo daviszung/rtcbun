@@ -1,4 +1,3 @@
-import s from "./styles/App.module.css";
 import { useState, useEffect, useRef } from 'react';
 
 // components
@@ -132,10 +131,10 @@ function App() {
   }, [roomID]);
 
   return (
-    <div className={s.app}>
-      <div id="backdrop" className={s.backdrop}></div>
+    <div className="app">
+      <div id="backdrop" className="backdrop"></div>
       <Modal setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}/>
-      <div className={s.container}>
+      <div className="appContainer">
         <Main localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
         <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}/>
       </div>

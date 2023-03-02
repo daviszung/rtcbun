@@ -1,17 +1,15 @@
-import s from '../styles/components/main.module.css'
-
 export function Main({localVideoRef, remoteVideoRef}) {
   return (
-    <div className={s.main}>
-      <div className={s.videos}>
+    <div className="main">
+      <div className="videos">
         <video
-            className={s.localVideo}
+            className="localVideo"
             ref={localVideoRef}
             autoPlay
             muted
         ></video>
         <video
-            className={s.remoteVideo}
+            className="remoteVideo"
             ref={remoteVideoRef}
             autoPlay
         ></video>
