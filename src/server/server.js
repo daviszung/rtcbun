@@ -125,11 +125,11 @@ Bun.serve({
           }
         })
       }
-      else if (url.pathname === "/bundle.js") {
+      else if (url.pathname === "/dist/bundle.js") {
         console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
       }
-      else if (url.pathname === "/assets/favicon-32x32.png") {
+      else if (url.pathname === "/assets/favicon.ico") {
         console.log(`serving ${path.join(__dirname, "../../assets/favicon.ico")}`);
         return new Response(file(path.join(__dirname, "../../assets/favicon.ico")));
       }
