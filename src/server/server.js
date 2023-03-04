@@ -118,7 +118,6 @@ Bun.serve({
     if (!name && !roomReq) {
       if (url.pathname === "/") {
         // return new Response(file(path.join(__dirname, "../../dist")))
-        console.log(`serving ${path.join(__dirname, "../../public/index.html")}`);
         return new Response(file(path.join(__dirname, "../../public/index.html")), {
           headers: {
             "content-type": "text/html"
@@ -126,11 +125,9 @@ Bun.serve({
         });
       }
       else if (url.pathname === "/dist/bundle.js") {
-        console.log(`serving ${path.join(__dirname, "../../dist/bundle.js")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
       }
       else if (url.pathname === "/dist/bundle.css") {
-        console.log(`serving ${path.join(__dirname, "../../dist/bundle.css")}`);
         return new Response(file(path.join(__dirname, "../../dist/bundle.css")), {
           headers: {
             "content-type": "text/css"
@@ -138,7 +135,6 @@ Bun.serve({
         });
       }
       else if (url.pathname === "/assets/favicon-32x32.png") {
-        console.log(`serving ${path.join(__dirname, "../../assets/favicon.ico")}`);
         return new Response(file(path.join(__dirname, "../../assets/favicon.ico")));
       }
       
@@ -161,6 +157,7 @@ Bun.serve({
 
   // upgrade from http to ws
   fetch(req, server) {
+    console.log({req})
     const url = new URL(req.url);
     if (server.upgrade(req, {
       data: {
