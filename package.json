@@ -2,9 +2,8 @@
   "name": "rtcbun",
   "version": "0.1.0",
   "scripts": {
-    "build": "./build.js",
-    "start": "bun run ./src/server/server.js",
-    "style": "./node_modules/.bin/esbuild --bundle ./src/stylesheet.css --outfile=./dist/bundle.css"
+    "build": "./node_modules/.bin/esbuild --bundle ./src/stylesheet.css --outfile=./dist/bundle.css && ./build.js",
+    "start": "bun run ./src/server/server.js"
   },
   "dependencies": {
     "path": "^0.12.7",
