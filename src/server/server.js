@@ -119,7 +119,8 @@ Bun.serve({
     // certbot config
     if (url.pathname.includes("/.well-known/")) {
       console.log('challenge found, serving path: ', url.pathname);
-      return new Response(file(url.pathname))
+      console.log(url.pathname.slice(27))
+      return new Response(url.pathname.slice)
     }
 
     // initial load for html, css, and js
