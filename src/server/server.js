@@ -105,6 +105,8 @@ function isJSON(str) {
 Bun.serve({
 
   port: 5000,
+  keyFile: "",
+  certFile: "",
 
   fetch(req, server) {
     console.log({req})
@@ -113,6 +115,12 @@ Bun.serve({
     console.log(url.port, url.pathname)
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
+
+    // certbot config
+    if (url.pathname.includes("/.well-known/")) {
+      console.log('challenge found, serving path: ', url.pathname);
+      return new Response(file(url.pathname))
+    }
 
     // initial load for html, css, and js
     if (!name && !roomReq) {
