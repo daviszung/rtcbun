@@ -105,8 +105,8 @@ function isJSON(str) {
 Bun.serve({
 
   port: 5000,
-  certFile: "etc/letsencrypt/live/www.rtcbun.site/fullchain.pem",
-  keyFile: "etc/letsencrypt/live/www.rtcbun.site/privkey.pem",
+  certFile: "../../../etc/letsencrypt/archive/www.rtcbun.site/fullchain1.pem",
+  keyFile: "../../../etc/letsencrypt/archive/www.rtcbun.site/privkey1.pem",
 
   fetch(req, server) {
     console.log({req})
