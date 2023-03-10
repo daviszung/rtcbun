@@ -96,7 +96,7 @@ function App() {
   useEffect(() => {
     if (name && roomID) {
       // create the websocket connection
-      const websocket = new WebSocket(`ws://rtcbun.site:8080/?name=${name}&room=${roomID}`);
+      const websocket = new WebSocket(`wss://rtcbun.site:8080/?name=${name}&room=${roomID}`);
 
       // determine how data from the server is handled
       websocket.onmessage = ({ data }) => {

@@ -156,6 +156,8 @@ Bun.serve({
 Bun.serve({
 
   port: 8080,
+  certFile: "../../../etc/letsencrypt/live/www.rtcbun.site/fullchain.pem",
+  keyFile: "../../../etc/letsencrypt/live/www.rtcbun.site/privkey.pem",
 
   // upgrade from http to ws
   fetch(req, server) {
