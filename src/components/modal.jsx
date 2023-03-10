@@ -22,7 +22,7 @@ export function Modal({setRoomID, setName, setOccupants}) {
   // creates a new room by getting a room number from the http server
   // puts the user into the new room
   async function createRoom(name) {
-    let data = await fetch(`http://rtcbun.site:5000/?name=${name}`);
+    let data = await fetch(`https://rtcbun.site:5000/?name=${name}`);
     data = await data.json();
     setName(name);
     setRoomID(data.message);
@@ -32,7 +32,7 @@ export function Modal({setRoomID, setName, setOccupants}) {
   // puts the user into a requested room
   async function joinRoom(name, roomToJoin) {
     
-    let data = await fetch(`http://rtcbun.site:5000/?name=${name}&roomReq=${roomToJoin}`);
+    let data = await fetch(`https://rtcbun.site:5000/?name=${name}&roomReq=${roomToJoin}`);
     data = await data.json();
     if (data.status !== 200) {
       alert(data.message)
