@@ -104,19 +104,18 @@ function isJSON(str) {
 // helps users create or join rooms
 Bun.serve({
 
+  // the server is run on port 5000, the certFile and keyFile are currently hardcoded
+  // to the pathfile on the AWS EC2
   port: 5000,
   certFile: "../../../etc/letsencrypt/archive/rtcbun.site/fullchain1.pem",
   keyFile: "../../../etc/letsencrypt/archive/rtcbun.site/privkey1.pem",
 
   fetch(req, server) {
-    console.log({req})
-
     const url = new URL(req.url);
-    console.log(url.port, url.pathname)
     const roomReq = url.searchParams.get('roomReq');
     const name = url.searchParams.get('name');
 
-    // initial load for html, css, and js
+    // initial GET req for html, css, and js
     if (!name && !roomReq) {
       if (url.pathname === "/") {
         // return new Response(file(path.join(__dirname, "../../dist")))
@@ -155,13 +154,14 @@ Bun.serve({
 // websocket server
 Bun.serve({
 
+  // the server is run on port 8080, the certFile and keyFile are currently hardcoded
+  // to the pathfile on the AWS EC2
   port: 8080,
   certFile: "../../../etc/letsencrypt/archive/rtcbun.site/fullchain1.pem",
   keyFile: "../../../etc/letsencrypt/archive/rtcbun.site/privkey1.pem",
 
   // upgrade from http to ws
   fetch(req, server) {
-    console.log({req})
     const url = new URL(req.url);
     if (server.upgrade(req, {
       data: {
