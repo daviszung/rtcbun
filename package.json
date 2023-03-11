@@ -2,7 +2,7 @@
   "name": "rtcbun",
   "version": "0.1.0",
   "scripts": {
-    "build": "./node_modules/.bin/esbuild --bundle ./src/stylesheet.css --outfile=./dist/bundle.css && ./build.js",
+    "build": "./node_modules/.bin/esbuild --minify --bundle ./src/stylesheet.css --outfile=./dist/bundle.css && ./build.js",
     "start": "bun run ./src/server/server.js"
   },
   "dependencies": {
