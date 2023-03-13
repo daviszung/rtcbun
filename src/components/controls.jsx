@@ -14,16 +14,17 @@ async function createOffer(socket) {
   }));
 };
 
-// enable or disable video
-function toggleVideo(stream) {
+// enable or disable video or audio
+function toggleMedia(stream, mediaType) {
+  console.log(mediaType)
+  const mediaTrack = stream.getTracks().find(track => track.kind === mediaType);
 
-  const videoTrack = stream.getTracks().find(track => track.kind === 'video');
-
-  if (videoTrack.enabled) {
-    videoTrack.enabled = false;
+  if (mediaTrack.enabled) {
+    mediaTrack.enabled = false;
   } else {
-    videoTrack.enabled = true;
+    mediaTrack.enabled = true;
   };
+  console.log(mediaTrack)
 };
 
 export function Controls({socket}) {
@@ -33,7 +34,10 @@ export function Controls({socket}) {
         createOffer(socket)
       }}>Connect</button>
       <button className="standardBtn" onClick={() => {
-        toggleVideo(userStream)
+        toggleMedia(userStream, "audio")
+      }}>Mute Self</button>
+      <button className="standardBtn" onClick={() => {
+        toggleMedia(userStream, "video")
       }}>Toggle Video</button>
     </div>
   );
