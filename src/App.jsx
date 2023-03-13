@@ -145,6 +145,6 @@ function App({envi}) {
       <Controls socket={socket}/>
     </div>
   );
-}
+};
 
 export default App;
