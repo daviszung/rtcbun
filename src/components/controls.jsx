@@ -16,7 +16,7 @@ async function createOffer(socket) {
 
 // enable or disable video or audio
 function toggleMedia(stream, mediaType) {
-  console.log(mediaType)
+
   const mediaTrack = stream.getTracks().find(track => track.kind === mediaType);
 
   if (mediaTrack.enabled) {
@@ -24,7 +24,16 @@ function toggleMedia(stream, mediaType) {
   } else {
     mediaTrack.enabled = true;
   };
-  console.log(mediaTrack)
+
+  if (mediaType === "audio") {
+    const audioBtn = document.querySelector("#audioBtn");
+    if (mediaTrack.enabled) {
+      audioBtn.innerHTML = "Mute Self";
+    } else {
+      audioBtn.innerHTML = "Unmute Self";
+    }
+  }
+
 };
 
 export function Controls({socket}) {
@@ -33,10 +42,10 @@ export function Controls({socket}) {
       <button className="standardBtn" onClick={() => {
         createOffer(socket)
       }}>Connect</button>
-      <button className="standardBtn" onClick={() => {
+      <button id="audioBtn" className="standardBtn" onClick={() => {
         toggleMedia(userStream, "audio")
       }}>Mute Self</button>
-      <button className="standardBtn" onClick={() => {
+      <button id="videoBtn" className="standardBtn" onClick={() => {
         toggleMedia(userStream, "video")
       }}>Toggle Video</button>
     </div>
