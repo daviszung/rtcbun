@@ -19,6 +19,8 @@ const servers = {
 
 // RTC Peer Connection
 export const pc = new RTCPeerConnection(servers);
+
+// cam and mic
 export let userStream = undefined;
 
 // when an ice candidate is found it is sent to the server
@@ -67,8 +69,8 @@ function App({envi}) {
   const [roomID, setRoomID] = useState(null);
   const [occupants, setOccupants] = useState([]);
 
-  let localVideoRef = useRef(null);
-  let remoteVideoRef = useRef(null);
+  const localVideoRef = useRef(null);
+  const remoteVideoRef = useRef(null);
 
   // this code only runs once, if it ran every time there was a re-render
   // the video would flicker off/on every time a message was sent
