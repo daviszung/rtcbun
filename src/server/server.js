@@ -1,4 +1,4 @@
-import { file } from 'bun'
+import { file } from 'bun';
 import path from 'path';
 
 // rooms contain up to two users
@@ -6,6 +6,9 @@ const rooms = {};
 const wsRooms = {};
 let numOfRooms = 0;
 const max = 2;
+
+// log the environment
+console.log(`Starting server in ${Bun.env.envi} mode`);
 
 // add someone to a room or create a room
 // takes a user and requested room as input, roomReq optional
@@ -86,7 +89,7 @@ function handleNewUser(user, roomReq = false) {
       });
     };
   };
-}
+};
 
 // JSON detection
 function isJSON(str) {
@@ -98,11 +101,54 @@ function isJSON(str) {
     }
   }
   return true;
-}
+};
 
-// regular http server
-// helps users create or join rooms
-Bun.serve({
+const serverOptionsDev = {
+
+  // the server is run on port 5000
+  port: 5000,
+
+  fetch(req, server) {
+    const url = new URL(req.url);
+    const roomReq = url.searchParams.get('roomReq');
+    const name = url.searchParams.get('name');
+
+    // initial GET req for html, css, and js
+    if (!name && !roomReq) {
+      if (url.pathname === "/") {
+        // return new Response(file(path.join(__dirname, "../../dist")))
+        return new Response(file(path.join(__dirname, "../../public/indexdev.html")), {
+          headers: {
+            "content-type": "text/html"
+          }
+        });
+      }
+      else if (url.pathname === "/dist/bundle.js") {
+        return new Response(file(path.join(__dirname, "../../dist/bundle.js")));
+      }
+      else if (url.pathname === "/dist/bundle.css") {
+        return new Response(file(path.join(__dirname, "../../dist/bundle.css")), {
+          headers: {
+            "content-type": "text/css"
+          }
+        });
+      }
+      else if (url.pathname === "/assets/favicon-32x32.png") {
+        return new Response(file(path.join(__dirname, "../../assets/favicon.ico")));
+      }
+      
+    } else {
+      // sends a Response object containing text information about how the data was handled
+      return handleNewUser(name, roomReq);
+    }
+  },
+
+  error (err) {
+    return new Response(`error in http server: ${err}`);
+  }
+};
+
+const serverOptionsProd = {
 
   // the server is run on port 5000, the certFile and keyFile are currently hardcoded
   // to the pathfile on the AWS EC2
@@ -148,11 +194,123 @@ Bun.serve({
   error (err) {
     return new Response(`error in http server: ${err}`);
   }
-});
+};
 
+const wsOptionsDev = {
 
-// websocket server
-Bun.serve({
+  // the server is run on port 8080
+  port: 8080,
+
+  // upgrade from http to ws
+  fetch(req, server) {
+    const url = new URL(req.url);
+    if (server.upgrade(req, {
+      data: {
+        name: url.searchParams.get("name") || "unnamed",
+        room: url.searchParams.get("room") || "unspecified room"
+      }
+    })) {
+      return;
+    }
+    return new Response("Expected a websocket connection", { status: 400 });
+  },
+
+  // websocket logic
+  websocket: {
+
+    open(ws) {
+      // put new users into their room
+      if (wsRooms[ws.data.room]) {
+        wsRooms[ws.data.room].push(ws);
+      } else {
+        wsRooms[ws.data.room] = [ws];
+      };
+
+      console.log(`New ws connection, user (${ws.data?.name}) subscribed to room (${ws.data?.room})`);
+
+      // subscribe to the room
+      ws.subscribe(ws.data.room);
+
+      // notify the room that the user has joined
+      ws.publish(ws.data.room, JSON.stringify({
+        type: "USER JOIN/EXIT",
+        name: "SERVER",
+        message: `${ws.data?.name} joined the room`,
+        occupants: rooms[ws.data.room]
+      }));
+    },
+
+    message(ws, message) {
+      // receiving offer, answer, or candidate
+      if (isJSON(message)) {
+        message = JSON.parse(message)
+        if (message.type === "offer") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              socket.send(JSON.stringify({
+                type: "server-offer",
+                sdp: message.sdp
+              }))
+            };
+          })
+        } else if (message.type === "answer") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              socket.send(JSON.stringify({
+                type: "server-answer",
+                sdp: message.sdp
+              }))
+            }
+          })
+        } else if (message.type === "candidate") {
+          wsRooms[ws.data.room].forEach((socket) => {
+            if (socket.data.name !== ws.data.name) {
+              socket.send(JSON.stringify({
+                type: "server-candidate",
+                candidate: message.data
+              }))
+            }
+          })
+        }
+      }
+      // send normal chat messages
+      else {
+        ws.publish(ws.data.room, JSON.stringify({
+          name: ws.data?.name,
+          message: message
+        }));
+      };      
+    },
+
+    close(ws) {
+
+      console.log(`connection closed in room ${ws.data?.room}`);
+
+      // remove user from room and wsRoom
+      rooms[ws.data.room] = rooms[ws.data.room].filter(el => el !== ws.data.name);
+      wsRooms[ws.data.room] = wsRooms[ws.data.room].filter(el => el.data.name !== ws.data.name);
+
+      // notify the room that the user has left
+      ws.publish(ws.data.room, JSON.stringify({
+        type: "USER JOIN/EXIT",
+        name: "SERVER",
+        message: `${ws.data?.name} left the room`,
+        occupants: rooms[ws.data.room]
+      }));
+    },
+
+    drain(ws) {
+      console.log("Please send me data. I am ready to receive it.")
+    }
+  },
+
+  error() {
+    console.log("Error in WebSocket Server")
+    return new Response("Error in WebSocket Server")
+  }
+};
+
+const wsOptionsProd = {
 
   // the server is run on port 8080, the certFile and keyFile are currently hardcoded
   // to the pathfile on the AWS EC2
@@ -267,4 +425,13 @@ Bun.serve({
     console.log("Error in WebSocket Server")
     return new Response("Error in WebSocket Server")
   }
-});
+};
+
+// start servers based on environment
+if (Bun.env.envi === 'development') {
+  Bun.serve(serverOptionsDev);
+  Bun.serve(wsOptionsDev);
+} else if (Bun.env.envi === 'production') {
+  Bun.serve(serverOptionsProd);
+  Bun.serve(wsOptionsProd);
+};

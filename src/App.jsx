@@ -59,7 +59,7 @@ async function handleAnswer (sdp) {
   }));
 };
 
-function App() {
+function App({envi}) {
   const [name, setName] = useState(null);
   const [socket, setSocket] = useState(null);
   const [list, setList] = useState([]);
@@ -97,7 +97,10 @@ function App() {
   useEffect(() => {
     if (name && roomID) {
       // create the websocket connection
-      const websocket = new WebSocket(`wss://rtcbun.site:8080/?name=${name}&room=${roomID}`);
+      // envi is the environment, if in development mode, it will be rtcbundev
+      const websocket = envi === 'rtcbun'
+      ? new WebSocket(`wss://rtcbun.site:8080/?name=${name}&room=${roomID}`)
+      : new WebSocket(`ws://localhost:8080/?name=${name}&room=${roomID}`);
 
       // determine how data from the server is handled
       websocket.onmessage = ({ data }) => {
@@ -134,7 +137,7 @@ function App() {
   return (
     <div className="app">
       <div id="backdrop" className="backdrop"></div>
-      <Modal setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}/>
+      <Modal envi={envi} setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}/>
       <div className="appContainer">
         <Main localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
         <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}/>
