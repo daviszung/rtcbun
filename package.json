@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "build": "./node_modules/.bin/esbuild --minify --bundle ./src/stylesheet.css --outfile=./dist/bundle.css && ./build.js",
-    "start": "bun run ./src/server/server.js"
+    "start": "cross-env envi=production bun run ./src/server/server.js",
+    "startdev": "cross-env envi=development bun run ./src/server/server.js"
   },
   "dependencies": {
     "path": "^0.12.7",
@@ -12,6 +13,7 @@
     "web-vitals": "^3.0.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "esbuild": "^0.17.10",
     "react-refresh": "0.10.0",
     "typescript": "latest"
