@@ -1,4 +1,4 @@
-import { pc } from '../App.jsx'
+import { pc, userStream } from '../App.jsx';
 
 async function createOffer(socket) {
   if (!socket) return;
@@ -11,15 +11,30 @@ async function createOffer(socket) {
   socket.send(JSON.stringify({
     type: "offer",
     sdp: pc.localDescription.sdp
-  }))
+  }));
+};
+
+// enable or disable video
+function toggleVideo(stream) {
+
+  const videoTrack = stream.getTracks().find(track => track.kind === 'video');
+
+  if (videoTrack.enabled) {
+    videoTrack.enabled = false;
+  } else {
+    videoTrack.enabled = true;
+  };
 };
 
 export function Controls({socket}) {
   return (
     <div className="outline">
-      <button className="connectBtn" onClick={() => {
+      <button className="standardBtn" onClick={() => {
         createOffer(socket)
       }}>Connect</button>
+      <button className="standardBtn" onClick={() => {
+        toggleVideo(userStream)
+      }}>Toggle Video</button>
     </div>
-  )
-}
+  );
+};

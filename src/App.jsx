@@ -19,6 +19,7 @@ const servers = {
 
 // RTC Peer Connection
 export const pc = new RTCPeerConnection(servers);
+export let userStream = undefined;
 
 // when an ice candidate is found it is sent to the server
 function handleIceCandidate(event, socket) {
@@ -78,6 +79,9 @@ function App({envi}) {
       audio: true,
     })
     .then(stream => {
+      
+      userStream = stream;
+
       if (localVideoRef.current) localVideoRef.current.srcObject = stream;
   
       stream.getTracks().forEach(track => {
