@@ -68,6 +68,7 @@ function App({envi}) {
   const [list, setList] = useState([]);
   const [roomID, setRoomID] = useState(null);
   const [occupants, setOccupants] = useState([]);
+  const [chat, setChat] = useState("none");
 
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -144,11 +145,11 @@ function App({envi}) {
     <div className="app">
       <div id="backdrop" className="backdrop"></div>
       <Modal envi={envi} setRoomID={setRoomID} setName={setName} setOccupants={setOccupants}/>
+      <Chat list={list} socket={socket} roomID={roomID} occupants={occupants} chat={chat}/>
       <div className="appContainer">
         <Main localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef}/>
-        <Chat list={list} socket={socket} roomID={roomID} occupants={occupants}/>
+        <Controls socket={socket} chat={chat} setChat={setChat}/>
       </div>
-      <Controls socket={socket}/>
     </div>
   );
 };

@@ -9,10 +9,10 @@ function sendInput(socket) {
 };
 
 
-export function Chat({list, socket, roomID, occupants}) {
+export function Chat({list, socket, roomID, occupants, chat}) {
 
   return (
-    <div className="chat">
+    <div id="chat" className="chat" style={{display: chat}}>
       <ul className="roomInfo">
         <li>Room: {roomID}</li>
         {occupants && occupants.map((name, index) => 

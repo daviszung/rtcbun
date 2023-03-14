@@ -28,15 +28,23 @@ function toggleMedia(stream, mediaType) {
   if (mediaType === "audio") {
     const audioBtn = document.querySelector("#audioBtn");
     if (mediaTrack.enabled) {
-      audioBtn.innerHTML = "Mute Self";
+      audioBtn.innerHTML = "Mute";
     } else {
-      audioBtn.innerHTML = "Unmute Self";
-    }
-  }
-
+      audioBtn.innerHTML = "Unmute";
+    };
+  };
 };
 
-export function Controls({socket}) {
+export function Controls({socket, chat, setChat}) {
+
+  function toggleChat(chat) {
+    if (chat === "none") {
+      setChat("flex");
+    } else {
+      setChat("none");
+    };
+  };
+
   return (
     <div className="outline">
       <button className="standardBtn" onClick={() => {
@@ -44,10 +52,13 @@ export function Controls({socket}) {
       }}>Connect</button>
       <button id="audioBtn" className="standardBtn" onClick={() => {
         toggleMedia(userStream, "audio")
-      }}>Mute Self</button>
+      }}>Mute</button>
       <button id="videoBtn" className="standardBtn" onClick={() => {
         toggleMedia(userStream, "video")
-      }}>Toggle Video</button>
+      }}>Video</button>
+      <button className="standardBtn" onClick={() => {
+        toggleChat(chat);
+      }}>Chat</button>
     </div>
   );
 };
